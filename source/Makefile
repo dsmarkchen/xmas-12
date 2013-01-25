@@ -19,15 +19,21 @@ OBJS_CPP_EX_01 = $(BUILD_DIR)/ex-01.o
 $(BUILD_DIR)/ex-01.o: $(SRC_DIR)/ex-01.cpp
 	@echo "Compiling "$@
 	@echo "    CPP       "$<
-	$(CPP) -I.. -o $@ $< -DTESTING
+	$(CPP) -I.. -O0 -g3 -Wall -o $@ $< -DTESTING
+	@echo 'Finished building: $<'
+	@echo ' '
 
 all: pre_compile $(CPP_EX_01)
 
 pre_compile: $(SRC_DIR)/ex-01.w
+	@echo "CWEB weaving: "$<
+	@echo ' '
 	ctangle $<
 	cweave  $<
 	pdftex ex-01.tex
 	cp ex-01.c ex-01.cpp
+	@echo 'Finished weaving: $<'
+	@echo ' '
 
 
 $(CPP_EX_01) : $(OBJS_CPP_EX_01) 
