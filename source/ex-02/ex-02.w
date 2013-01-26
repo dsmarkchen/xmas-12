@@ -87,7 +87,6 @@ int spell_digit(int n,  char* out_buf, size_t out_buf_size)
             sprintf(d_name, "%s", NUM_TABLE[i].name);
     }
     sprintf(out_buf, "%s",  d_name);
-    printf("\nINFO: %s\n",  d_name);
     return d;
 
 }
@@ -135,15 +134,13 @@ int spell_under_thousand(int n, char* out_buf, size_t out_buf_size)
 }
 
 
-int spell_numbers(int n, char* out_buf, size_t out_buf_size)
+int spell_under_million(int n, char* out_buf, size_t out_buf_size)
 {
     int d_1k = n/1000;
-    char d_1k_name[20];
+    char d_1k_name[256];
     if(d_1k !=0) {
-        char d1k_out_buf[256];
 
         spell_under_thousand(d_1k,d_1k_name,256);
-        printf("########## %d",d_1k);
         strcat(d_1k_name," thousand");
         n-= d_1k*1000;
     }
@@ -156,6 +153,26 @@ int spell_numbers(int n, char* out_buf, size_t out_buf_size)
         sprintf(out_buf, "%s", d_out_buf);
     return n;
 }
+int spell_numbers(int n, char* out_buf, size_t out_buf_size)
+{
+    int d_1m = n/1000000;
+    char d_1m_name[256];
+     if(d_1m !=0) {
+        spell_under_million(d_1m,d_1m_name,256);
+        strcat(d_1m_name," million");
+        n-= d_1m*1000000;
+    }
+    char d_out_buf[256];
+    n = spell_under_million(n, d_out_buf, 256);
+    if(d_1m != 0) {
+        sprintf(out_buf, "%s, %s", d_1m_name, d_out_buf);
+    }
+    else
+        sprintf(out_buf, "%s", d_out_buf);
+    return n;
+}
+
+
 @ 
 @d NUM_NODE_MAX 10
 @d NUM_NODE_TEN_MAX 18
@@ -254,5 +271,28 @@ TEST_F(spell_test, test_to_spell_twelve_thousands)
     int r = spell_numbers(12609, spell_buf, spell_buf_size) ;
     ASSERT_EQ(0, r);
     ASSERT_STREQ("twelve thousand, six hundred and nine", spell_buf);
+}
+@ @<tests...@>+=
+TEST_F(spell_test, test_to_spell_hundred_thousands)
+{
+    const size_t spell_buf_size = 256;
+    char spell_buf[spell_buf_size] = {0};
+    char* ref_str = "five hundred and twelve thousand, six hundred and seven";
+   
+    int r = spell_numbers(512607, spell_buf, spell_buf_size) ;
+    ASSERT_EQ(0, r);
+    ASSERT_STREQ(ref_str, spell_buf);
+}
+@ @<tests...@>+=
+TEST_F(spell_test, test_to_spell_millions)
+{
+    const size_t spell_buf_size = 256;
+    char spell_buf[spell_buf_size] = {0};
+    char* ref_str = "forty three million, \
+one hundred and twelve thousand, six hundred and three";
+   
+    int r = spell_numbers(43112603, spell_buf, spell_buf_size) ;
+    ASSERT_EQ(0, r);
+    ASSERT_STREQ(ref_str, spell_buf);
 }
 
