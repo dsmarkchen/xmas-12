@@ -44,7 +44,8 @@ Example output (for the above input)
 typedef struct mine_board_struct {
     int n;        /* rows */
     int m;        /* columns */
-    char** field; /* data */
+    char* board; /* data */
+    char* output;
 } mine_board_t;
 
 @ @<types@>+=
@@ -98,9 +99,23 @@ int mine_board_init(mine_board_t** ptr_env, FILE* fp)
         free(env);
         return -5;
     }
+    env->board = (char*) malloc(env->n*env->m + 1);
+    env->output = (char*) malloc(env->n*env->m + 1);
+    if(!env->board || !env->output) {
+        if(env->board) free(env->board);
+        free(env);
+        return -5;
+    }
+
+
     for(i=0; i<env->n;i++) {
         if((fgets(s, SMAX, fp)) != NULL) {
-
+            @<stripe newline from a string |s|@>@;
+           if(strlen(s) != env->m) {
+                printf("eror read %d(%d) charactors of line %d: %s", env->m, strlen(s), env->n, s);
+                return -1;
+            }
+            strcat(env->board, s);            
         }
         else return -2;
     }
@@ -114,5 +129,35 @@ void mine_board_free(mine_board_t* env)
 }
 
 
+@ @<stripe newline from a string |s|@>=
+{
+    int j;
+    for(j=0;j<strlen(s);j++) {
+        if((s[j]=='\r') || (s[j]=='\n')) {
+            s[j] = 0;
+            break;
+        }
+    }
+} 
+@ @<tests...@>+=
+TEST_F(mine_field_test, test_input_the_rest_line)
+{
+    int r= 0;
+    FILE* fp_in = NULL;
+    mine_board_t* env = NULL;
+    fp_in = fopen("mine_input_01.txt", "r");
+    if(!fp_in) {
+        ASSERT_EQ(1, r);
+    }
+    r = mine_board_init(&env, fp_in);
+    ASSERT_EQ(0, r);
+    if(env->board == 0) {
+        ASSERT_EQ(1, r);
+    }
+    char* ref_board ="*.....*.....";
+    ASSERT_STREQ(ref_board, env->board);
 
+    fclose(fp_in);
+    mine_board_free(env);
+}
 @ Index.
