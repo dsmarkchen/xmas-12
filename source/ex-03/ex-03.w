@@ -1,7 +1,9 @@
 @ This is the exercise -- {\tt mine fields}.
 
 
-A field of N x M squares is represented by N lines of exactly M characters each. The character ‘*’ represents a mine and the character ‘.’ represents no-mine.
+A field of N x M squares is represented by N lines of exactly M characters
+each. The character ‘*’ represents a mine and the character ‘.’ represents
+no-mine.
 
 Example input (a 3 x 4 mine-field of 12 squares, 2 of
 which are mines)
@@ -111,8 +113,9 @@ int mine_board_init(mine_board_t** ptr_env, FILE* fp)
     for(i=0; i<env->n;i++) {
         if((fgets(s, SMAX, fp)) != NULL) {
             @<stripe newline from a string |s|@>@;
-           if(strlen(s) != env->m) {
-                printf("eror read %d(%d) charactors of line %d: %s", env->m, strlen(s), env->n, s);
+            if(strlen(s) != env->m) {
+                printf("eror read %d(%d) charactors of line %d: %s", 
+                        env->m, strlen(s), env->n, s);
                 return -1;
             }
             strcat(env->board, s);            
@@ -123,9 +126,13 @@ int mine_board_init(mine_board_t** ptr_env, FILE* fp)
     return MINE_ERROR_NO_ERROR;
 }
 void mine_board_free(mine_board_t* env)
-{
-    free(env);
-    env = NULL;
+{   
+    if(env) {
+        if(env->board) free(env->board);
+        if(env->output) free(env->output);
+        free(env);
+        env = NULL;
+    }
 }
 
 
