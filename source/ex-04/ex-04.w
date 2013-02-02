@@ -19,12 +19,12 @@ strategy.
 
 @ @<incl...@>+=
 #include <stdio.h>
-@ identify doors.
+@ I identify doors as {\tt a, b, c}.
 @<datas@>+=
 char a,b,c;
 
 
-@ identify goat and car.
+@ Next, identify goat and car.
 @d GOAT '.'
 @d CAR  '*'
 
@@ -35,14 +35,19 @@ char a,b,c;
 @<incl...@>+=
 #include <gtest/gtest.h>
 
-@ srand set the start value of rand.
+@ 
 @<types@>+=
 class monty_test : public testing::Test
 {
-    virtual void SetUp() {
-         srand( (unsigned)time( NULL ) ); 
-    }
+    virtual void SetUp();
 };
+
+
+@ {\tt srand} set the start value of {\tt rand}.
+@<test...@>+=
+void monty_test::SetUp() {
+    srand( (unsigned)time( NULL ) ); 
+}
 
 @ @<rout...@>+=
 bool is_it_car(char c)
@@ -103,7 +108,9 @@ int monty_init()
 }
 
 
-@ @<rout...@>+=
+@ Second test. Lets's consider client select.
+
+@<rout...@>+=
 int client_select()
 {
     int r = rand()%3;
@@ -119,7 +126,6 @@ TEST_F(monty_test, game_of_client_select)
     int sel = client_select(); // sel should be 0, or 1, or 2
     ASSERT_GE(sel, 0);
     ASSERT_LE(sel, 2);
-    
 }
 
 @ Monty the host pick up one
@@ -199,7 +205,10 @@ TEST_F(monty_test, game_of_play_with_stragety_1)
     game_play(STRATEGY_1, sel, monty);
     
 }
-@ @<tests...@>+=
+@
+@d DUMP
+@d MAX_GAMES 1000
+@<tests...@>+=
 TEST_F(monty_test, game_of_play_for_thousand_times)
 {
     int x;
@@ -208,7 +217,7 @@ TEST_F(monty_test, game_of_play_for_thousand_times)
     int s2=0;
     int n1=0;
     int n2=0;
-    for(int i=0;i<1000;i++) {
+    for(int i=0;i<MAX_GAMES;i++) {
         monty_init();
         int sel = client_select();
         int mty = monty_pickup(sel);
@@ -225,7 +234,11 @@ TEST_F(monty_test, game_of_play_for_thousand_times)
         }
 
     }
-    printf("no switch: %d of %d wins \r\nswitched: %d of %d wins\r\n", n1, s1, n2,s2);
+#ifdef DUMP
+    printf("stayed:     %d of %d wins (%.2f%%) \r\n\
+switched:   %d of %d wins (%.2f%%)\r\n",
+         n1, s1, (float)s1/n1*100, n2,s2, (float)s2/n2*100);
+#endif
     ASSERT_GT(s2, s1);
 }
 @ I am using clock.
