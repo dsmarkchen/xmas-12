@@ -39,7 +39,7 @@ mapOfVariables);$}
 - Should evaluate complex cases:
 
 {\tt 
-\midline{$mapOfVariables.put(“name”,”Cenk”);$}
+\midline{$mapOfVariables.put("name","Cenk");$}
 \midline{$templateEngine.evaluate("Hello \$\{\{\$name\}\}", mapOfVariables);$}
 \midline{$=>   should evaluate to "Hello \$\{Cenk\}"$}
 }
