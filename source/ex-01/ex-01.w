@@ -72,14 +72,13 @@ TEST_F(calc_state_test, test_minimum)
 int calc_minimum_of_elements(int_elem_t* node)
 {
     int min;
-    int r;
     int_elem_t* p; 
     if(node == NULL) return 0;
 
     min=node->v;
     p=node->next;
 
-    for(;p!=NULL; p=p->next, r++) {
+    for(;p!=NULL; p=p->next) {
         if(p->v < min) min = p->v;
     }
     return min;
@@ -97,14 +96,13 @@ TEST_F(calc_state_test, test_maximum)
 int calc_maximum_of_elements(int_elem_t* node)
 {
     int max;
-    int r;
     int_elem_t* p; 
     if(node == NULL) return 0;
 
     max=node->v;
     p=node->next;
 
-    for(;p!=NULL; p=p->next, r++) {
+    for(;p!=NULL; p=p->next) {
         if(p->v > max) max = p->v;
     }
     return max;
