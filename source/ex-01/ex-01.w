@@ -1,13 +1,15 @@
+\datethis
 @ This is the first exercise -- {\tt Calc Stats}.
 
 Your task is to process a sequence of integer numbers
 to determine the following statistics:
 
-\smallskip minimum value
-\smallskip maximum value
-\smallskip number of elements in the sequence
-\smallskip average value
+\smallskip --- minimum value
+\smallskip --- maximum value
+\smallskip --- number of elements in the sequence
+\smallskip --- average value
 
+\bigskip Here the code starts:
 @c
 @<includes@>@/
 @<types@>@/
@@ -110,7 +112,8 @@ int calc_maximum_of_elements(int_elem_t* node)
 
 
 
-@ @<tests...@>+=
+@ Next, we get the number of elements. 
+@<tests...@>+=
 TEST_F(calc_state_test, test_number_of_elements)
 {
     int nums = calc_number_of_elements(&a_0);
@@ -172,4 +175,4 @@ TEST_F(calc_state_test, boundary_check_with_input_null)
     ASSERT_FLOAT_EQ(0, ave);   
 }
 
-
+@ Index.
