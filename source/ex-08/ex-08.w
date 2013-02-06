@@ -23,10 +23,10 @@ What name do you think is appropriate?
 For example, the intersection of range $[0..3] (numbers 0, 1, 2 \& 3)$ and
 range $[2..4]$ is the range $[2..3]$
 
- Develop another class to represent floating point ranges, with the same
+Develop another class to represent floating point ranges, with the same
 operations.
 
-    While developing the floating point range class, think about how it differs
+While developing the floating point range class, think about how it differs
 from the integer range.  Is it possible to modify the behaviour of one of them
 to become more consistent with the behaviour of the other? The more uniform
 their behaviour, the easier the classes will be to use.  If you modify one of
@@ -56,91 +56,19 @@ class ex_test : public testing::Test
 };
 
 
-@ First Test case.
+@ First Test case. Create a Integer range class, initialize an object with a
+constructor.
+
 @<tests...@>+=
-TEST_F(ex_test, test_of_print_a_number_3)
+TEST_F(ex_test, test_constructor_with_given_range)
 {
-    int n;
-    char s[SMAX];
-    char* ref_s = "Fizz";
-    n = 3;
-    Fizz_Buzz(3, s, SMAX);
-    ASSERT_STREQ(ref_s, s);
+    CIntRange* p = CIntRange(0, 10);
+    ASSERT_NE(NULL, p);
 }
 
 @ 
 @d SMAX 100
 @<rout...@>+=
-void Fizz_Buzz(int n, char* s, size_t ssize)
-{
-    int update_5 = 0;
-    int update_3 = 0;
-    if(n % 5 == 0) {
-        sprintf(s, "Buzz");
-        update_5 = 1;
-    }
-    if(n % 3 == 0) {
-        sprintf(s, "Fizz");
-        update_3 = 1;
-    }
-    if(update_5 && update_3)  {
-        sprintf(s, "FizzBuzz");
-    }
-    if(!update_3 && !update_5) 
-        sprintf(s, "%d", n);
-}
 
-@ @<tests...@>+=
-TEST_F(ex_test, test_of_1_to_3)
-{
-    int n;
-    char s[SMAX];
-    char* ref_s = "Fizz";
-    Fizz_Buzz(1, s, SMAX);
-    ASSERT_STREQ("1", s);
-    Fizz_Buzz(2, s, SMAX);
-    ASSERT_STREQ("2", s);
-    Fizz_Buzz(3, s, SMAX);
-    ASSERT_STREQ(ref_s, s);
-}
-
-@ @<tests...@>+=
-TEST_F(ex_test, test_of_5)
-{
-    int n;
-    char s[SMAX];
-    char* ref_s = "Buzz";
-    Fizz_Buzz(5, s, SMAX);
-    ASSERT_STREQ(ref_s, s);
-}
-
-@ @<tests...@>+=
-TEST_F(ex_test, test_of_6)
-{
-    int n;
-    char s[SMAX];
-    char* ref_s = "Fizz";
-    Fizz_Buzz(6, s, SMAX);
-    ASSERT_STREQ(ref_s, s);
-}
-@ @<tests...@>+=
-TEST_F(ex_test, test_of_15)
-{
-    int n;
-    char s[SMAX];
-    char* ref_s = "FizzBuzz";
-    Fizz_Buzz(15, s, SMAX);
-    ASSERT_STREQ(ref_s, s);
-}
-@ Test of print 100 numbers
-@<tests...@>+=
-TEST_F(ex_test, test_of_print_100_numbers)
-{
-    char s[SMAX];
-    for(int n=1; n<=100;n++) {
-        Fizz_Buzz(n, s, SMAX);
-        printf("%s\r\n", s);
-    }
-}
 
 @ Index.
