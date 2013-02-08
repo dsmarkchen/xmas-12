@@ -62,13 +62,69 @@ constructor.
 @<tests...@>+=
 TEST_F(ex_test, test_constructor_with_given_range)
 {
-    CIntRange* p = CIntRange(0, 10);
-    ASSERT_NE(NULL, p);
+    CIntRange obj1(0, 10);
+    CIntRange obj2(0, 10);
+    ASSERT_EQ(obj1, obj2);
+}
+@
+@d X_TRUE 1
+@d X_FALSE 0
+@<type...@>+=
+typedef unsigned char X_BOOL;
+
+class CIntRange{
+    int m_a;
+    int m_b;
+    X_BOOL m_incl_a;
+    X_BOOL m_incl_b;
+
+public:
+    CIntRange(int a, int b, X_BOOL incl_a = X_TRUE, X_BOOL incl_b=X_TRUE)
+        : m_a(a), m_b(b) 
+    { 
+        m_incl_a = incl_a;
+        m_incl_b = incl_b;
+    }
+    X_BOOL operator==(const CIntRange & other) const;
+
+    CIntRange intersect(CIntRange obj1, CIntRange obj2);
+};
+@ 
+@<rout...@>+=
+X_BOOL CIntRange::operator==(const CIntRange & other) const
+{
+    if((m_a == other.m_a)&&
+            (m_b == other.m_b) &&
+            (m_incl_a == other.m_incl_a) &&
+            (m_incl_b == other.m_incl_b))
+        return X_TRUE;
+    return X_FALSE;
 }
 
-@ 
-@d SMAX 100
-@<rout...@>+=
+@ Test assignment @<test...@>+=
+TEST_F(ex_test, test_assignment)
+{
+    CIntRange a(0,10);
+    CIntRange b(0,1);
+    CIntRange c(0,10);
+    b = a;
+    ASSERT_EQ(c, b);
 
+}
+@ Test intersection
+@<test...@>+=
+TEST_F(ex_test, test_assignment)
+{
+    CIntRange a(0,4);
+    CIntRange b(2,5);
+    CIntRange c(2,4);
+    CIntRange d = CIntRange::intersect(a, b);
+    ASSERT_EQ(c, d);
 
+}
+@ @<rout...@>+=
+CIntRange intersect(CIntRange obj1, CIntRange obj2)
+{
+
+}
 @ Index.
