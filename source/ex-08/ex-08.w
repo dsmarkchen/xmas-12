@@ -1,4 +1,6 @@
 % a little 16pt hskip for a line
+@s int CRange
+@s int CIntRange
 \def\midline#1{\line{\hskip16pt\relax#1\hfil}}
 
 @ This is the exercise --- {\tt ``range''}.
@@ -20,7 +22,7 @@ What name do you think is appropriate?
 
 \midline{Intersection of two ranges}
 
-For example, the intersection of range $[0..3] (numbers 0, 1, 2 \& 3)$ and
+For example, the intersection of range $[0..3] (numbers 0, 1, 2, \& 3)$ and
 range $[2..4]$ is the range $[2..3]$
 
 Develop another class to represent floating point ranges, with the same
@@ -87,7 +89,7 @@ public:
     }
     X_BOOL operator==(const CIntRange & other) const;
 
-    CIntRange intersect(CIntRange obj1, CIntRange obj2);
+    CIntRange intersect(CIntRange obj2);
 };
 @ 
 @<rout...@>+=
@@ -113,18 +115,95 @@ TEST_F(ex_test, test_assignment)
 }
 @ Test intersection
 @<test...@>+=
-TEST_F(ex_test, test_assignment)
+TEST_F(ex_test, test_intersection)
 {
-    CIntRange a(0,4);
-    CIntRange b(2,5);
-    CIntRange c(2,4);
-    CIntRange d = CIntRange::intersect(a, b);
+    CIntRange a(0,3);
+    CIntRange b(2,4);
+    CIntRange c(2,3);
+    CIntRange d = a.intersect(b);
     ASSERT_EQ(c, d);
 
 }
 @ @<rout...@>+=
-CIntRange intersect(CIntRange obj1, CIntRange obj2)
+CIntRange CIntRange::intersect(CIntRange obj2)
 {
+    int min, max;
+    min = this->m_a;
+    if (min < obj2.m_a )  min = obj2.m_a;
+    max = this->m_b;
+    if(max > obj2.m_b) max = obj2.m_b;
+    printf("result: %d %d\r\n", min, max);
+    return CIntRange(min, max);
+    
+}
+
+@ Test with float. Can I do it with template?
+@<test...@>+=
+TEST_F(ex_test, test_assignment_with_template) @/
+{
+    CRange<int> a(0,10);
+    CRange<int> b(0,1);
+    CRange<int> c(0,10);
+    b = a;
+    ASSERT_EQ(c, b);
 
 }
+
+@ @<types...@>+=
+template <class T> class CRange {
+public: 
+    CRange<T> (T a, T b ) {m_min=a; m_max=b;}   
+    X_BOOL operator==(const CRange<T> & other) const;
+    CRange<T> intersect(CRange<T> obj2);
+    T m_min; 
+    T m_max;
+};
+
+@
+@<rout...@>+=
+template <class T>
+X_BOOL CRange<T>::operator==(const CRange<T> & other) const
+{
+    if((m_min == other.m_min)&&
+            (m_max == other.m_max))
+        return X_TRUE;
+    return X_FALSE;
+}
+
+@ Test for intersact with template
+@<test...@>+=
+TEST_F(ex_test, test_intersection_with_template)
+{
+    CRange<int> a(0,3);
+    CRange<int> b(2,4);
+    CRange<int> c(2,3);
+    CRange<int> d = a.intersect(b);
+    ASSERT_EQ(c, d);
+
+}
+
+@ @<rout...@>+=
+template <class T>
+CRange<T> CRange<T>::intersect(CRange<T> obj2)
+{
+    T min, max;
+    min = this->m_min;
+    if (min < obj2.m_min )  min = obj2.m_min;
+    max = this->m_max;
+    if(max > obj2.m_max) max = obj2.m_max;
+    return CRange<T>(min, max);
+ 
+}
+@ Test float intersact
+@<test...@>+=
+TEST_F(ex_test, test_intersection_with_template_on_float)
+{
+    CRange<float> a(0.5,3.5);
+    CRange<float> b(2.5,4.5);
+    CRange<float> c(2.5,3.5);
+    CRange<float> d = a.intersect(b);
+    ASSERT_EQ(c, d);
+
+}
+
 @ Index.
