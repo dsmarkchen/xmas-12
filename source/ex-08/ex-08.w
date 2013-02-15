@@ -14,7 +14,7 @@ operations:
 
 \midline{Construction.}
 
-$For example: r = new Range(0,10) // modify to fit your language's syntax$
+For example: ``r = new Range(0,10) // modify to fit your language's syntax''
 
 \midline{Checking whether an integer lies in the range.}
 
