@@ -22,7 +22,7 @@ What name do you think is appropriate?
 
 \midline{Intersection of two ranges}
 
-For example, the intersection of range $[0..3] (numbers 0, 1, 2, \& 3)$ and
+For example, the intersection of range $[0..3] (numbers 0, 1, 2, 3)$ and
 range $[2..4]$ is the range $[2..3]$
 
 Develop another class to represent floating point ranges, with the same
