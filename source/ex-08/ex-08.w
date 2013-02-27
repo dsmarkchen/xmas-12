@@ -32,7 +32,7 @@ While developing the floating point range class, think about how it differs
 from the integer range.  Is it possible to modify the behaviour of one of them
 to become more consistent with the behaviour of the other? The more uniform
 their behaviour, the easier the classes will be to use.  If you modify one of
-the classes – do you feel confident you do not break anything? If you don’t
+the classes – do you feel confident you do not break anything? If you don't
 feel confident, what can you do about that?
 
 \bigskip Here code starts:
